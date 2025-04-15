@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="py-8">
+  <h1 class="text-4xl font-serif mb-8">Our Collection</h1>
+  
+  <!-- Category filter -->
+  <div class="flex flex-wrap gap-4 mb-8">
+    <a href="/products" class="btn btn-sm btn-outline">All</a>
+    <a href="/products?category=men" class="btn btn-sm btn-outline">Men</a>
+    <a href="/products?category=women" class="btn btn-sm btn-outline">Women</a>
+    <a href="/products?category=kids" class="btn btn-sm btn-outline">Kids</a>
+  </div>
+  
+  <!-- Products grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% for product in products %}
+    <div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow">
+      <figure>
+        <a href="/products/{{ product.id }}">
+          <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
+        </a>
+      </figure>
+      <div class="card-body p-4">
+        <h2 class="card-title">{{ product.name }}</h2>
+        <p class="text-xl font-semibold">${{ "%.2f"|format(product.price) }}</p>
+        <div class="card-actions justify-end mt-4">
+          <form action="/cart/add" method="post">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  {% if not products %}
+  <div class="text-center py-16">
+    <p class="text-xl">No products found.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
